@@ -1,6 +1,15 @@
 .sign-in {
   width: 30vw;
 
+  .heading {
+    color: #334155;
+    margin-bottom: 10px;
+  }
+
+  .sub-heading {
+    color: #94a3b8;
+  }
+
   .buttons {
     display: flex;
     align-items: center;

@@ -7,6 +7,7 @@ import "./header.styles.scss";
 
 const Header = ({ currentUser }) => {
   const pathname = useLocation().pathname;
+
   return (
     <div className="header">
       <Link to="/">

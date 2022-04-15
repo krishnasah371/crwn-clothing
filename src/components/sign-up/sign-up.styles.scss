@@ -1,0 +1,14 @@
+.sign-up {
+	display: flex;
+	flex-direction: column;
+	width: 30vw;
+
+	.heading {
+		color: #334155;
+		margin-bottom: 10px;
+	}
+
+	.sub-heading {
+		color: #94a3b8;
+	}
+}
