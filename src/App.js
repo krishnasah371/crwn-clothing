@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import { getDoc } from "firebase/firestore";
 import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 
 // Styles and components
@@ -12,20 +13,19 @@ import "./App.css";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
+
   // ComponentDidMount()
   useEffect(() => {
     const unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
       if (userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
-
-        userRef.onSnapshot((snapShot) => {
-          setCurrentUser({
-            id: snapShot.id,
-            ...snapShot.data(),
-          });
+        const snapShot = await getDoc(userRef);
+        setCurrentUser({
+          id: snapShot.id,
+          ...snapShot.data(),
         });
       } else {
-        setCurrentUser(null);
+        setCurrentUser(userAuth);
       }
 
       // ComponentWillUnmount();
