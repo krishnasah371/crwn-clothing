@@ -13,10 +13,13 @@ import SignInAndSignUpPage from "./pages/signin-and-signup/signin-and-signup.com
 import Header from "./components/header/header.component";
 import { setCurrentUser } from "./redux/user/user.actions";
 
-function App({ setCurrentUser, currentUser }) {
-  // ComponentDidMount()
-  useEffect(() => {
-    const unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
+class App extends React.Component {
+  unsubscribeFromAuth = null;
+
+  componentDidMount() {
+    const { setCurrentUser } = this.props;
+
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
       if (userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
         const snapShot = await getDoc(userRef);
@@ -27,31 +30,36 @@ function App({ setCurrentUser, currentUser }) {
       } else {
         setCurrentUser(userAuth);
       }
+    });
+  }
 
-      // ComponentWillUnmount();
-      return () => {
-        unsubscribeFromAuth();
-      };
-    }, []);
-  });
+  componentWillUnmount() {
+    this.unsubscribeFromAuth();
+  }
 
-  return (
-    <div>
-      <Header />
-      <Routes>
-        <Route exact path="/" element={<HomePage />} />
-        <Route path="/shop" element={<ShopPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route
-          exact
-          path="/signin"
-          element={
-            currentUser ? <Navigate to="/" replace /> : <SignInAndSignUpPage />
-          }
-        />
-      </Routes>
-    </div>
-  );
+  render() {
+    const { currentUser } = this.props;
+    return (
+      <div>
+        <Header />
+        <Routes>
+          <Route exact path="/" element={<HomePage />} />
+          <Route path="/shop" element={<ShopPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route
+            path="/signin"
+            element={
+              currentUser ? (
+                <Navigate to="/" replace />
+              ) : (
+                <SignInAndSignUpPage />
+              )
+            }
+          />
+        </Routes>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = ({ user }) => ({
